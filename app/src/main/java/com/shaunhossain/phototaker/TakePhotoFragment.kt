@@ -11,12 +11,15 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import android.Manifest
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.shaunhossain.phototaker.databinding.FragmentTakePhotoBinding
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 class TakePhotoFragment : Fragment() {
 
@@ -25,6 +28,8 @@ class TakePhotoFragment : Fragment() {
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private lateinit var imageUri: Uri
     private val CAMERA_PERMISSION_CODE: Int = 1
+
+   private val timeStamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'",Locale.ENGLISH).format(Date())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,13 +46,15 @@ class TakePhotoFragment : Fragment() {
         imageUri = createUri()
         registerPictureLauncher()
 
+        Log.d("imageUri","${imageUri.path}")
+
         binding.buttonFirst.setOnClickListener {
             checkCameraPermissionAndOpenCamera()
         }
     }
 
     private fun createUri(): Uri {
-        val imageFile: File = File(requireContext().filesDir, "camera_photo.jpg")
+        val imageFile: File = File(requireContext().filesDir, "Take_Photo_$timeStamp.jpg")
         return FileProvider.getUriForFile(
             requireContext(),
             "com.shaunhossain.phototaker.fileProvider",
