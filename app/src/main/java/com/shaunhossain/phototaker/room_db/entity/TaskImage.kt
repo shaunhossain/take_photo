@@ -7,7 +7,7 @@ import com.shaunhossain.phototaker.utils.taskImageTable
 
 @Entity(tableName = taskImageTable)
 data class TaskImage(
-    @PrimaryKey(autoGenerate = true) var id: Int?,
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
     @ColumnInfo(name = "TaskId") var taskId: Int?,
     @ColumnInfo(name = "TicketNumber") var ticketNumber: String?,
     @ColumnInfo(name = "ImageFilePath") var imageFilePath: String?,

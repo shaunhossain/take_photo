@@ -13,10 +13,18 @@ import androidx.activity.result.contract.ActivityResultContracts
 import android.Manifest
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.shaunhossain.phototaker.PhotoTakerApplication
 import com.shaunhossain.phototaker.databinding.FragmentTakePhotoBinding
+import com.shaunhossain.phototaker.repository.TaskRepository
+import com.shaunhossain.phototaker.room_db.database.AppDatabase
+import com.shaunhossain.phototaker.room_db.entity.TaskImage
+import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -30,6 +38,9 @@ class TakePhotoFragment : Fragment() {
     private val CAMERA_PERMISSION_CODE: Int = 1
 
    private val timeStamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'",Locale.ENGLISH).format(Date())
+
+    private val database by lazy { AppDatabase.getDataBase(requireContext()) }
+    val repository by lazy { TaskRepository(database.taskImageDao()) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +57,14 @@ class TakePhotoFragment : Fragment() {
         imageUri = createUri()
         registerPictureLauncher()
 
-        Log.d("imageUri","${imageUri.path}")
+        lifecycleScope.launch {
+            repository.allTaskImage.collect {
+                if(it.isNotEmpty()){
+                    binding.imageView.setImageURI(null)
+                    binding.imageView.setImageURI(Uri.parse(it[0].imageFilePath))
+                }
+            }
+        }
 
         binding.buttonFirst.setOnClickListener {
             checkCameraPermissionAndOpenCamera()
@@ -68,8 +86,10 @@ class TakePhotoFragment : Fragment() {
             ActivityResultCallback { result ->
                 try {
                     if (result) {
-                        binding.imageView.setImageURI(null)
-                        binding.imageView.setImageURI(imageUri)
+                        val taskImage: TaskImage = TaskImage(taskId = 12, ticketNumber = "ticket-13", imageFilePath = imageUri.toString(), imagePosition = 1)
+                        lifecycleScope.launch {
+                            repository.insertTaskImage(taskImage)
+                        }
                     }
                 } catch (e: Exception) {
                     e.stackTrace
