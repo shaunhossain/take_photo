@@ -40,7 +40,7 @@ class TakePhotoFragment : Fragment() {
    private val timeStamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'",Locale.ENGLISH).format(Date())
 
     private val database by lazy { AppDatabase.getDataBase(requireContext()) }
-    val repository by lazy { TaskRepository(database.taskImageDao()) }
+    private val repository by lazy { TaskRepository(database.taskImageDao()) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
