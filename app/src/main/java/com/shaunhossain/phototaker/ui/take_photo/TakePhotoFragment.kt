@@ -1,4 +1,4 @@
-package com.shaunhossain.phototaker
+package com.shaunhossain.phototaker.ui.take_photo
 
 import android.content.pm.PackageManager
 import android.net.Uri
