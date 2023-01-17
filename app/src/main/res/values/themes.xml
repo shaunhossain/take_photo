@@ -6,4 +6,8 @@
     </style>
 
     <style name="Theme.PhotoTaker" parent="Base.Theme.PhotoTaker" />
+
+    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
+        <item name="cornerSize">10%</item>
+    </style>
 </resources>

@@ -19,6 +19,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bpdb.fieldforce.adapter.TaskAdapter
 import com.shaunhossain.phototaker.PhotoTakerApplication
 import com.shaunhossain.phototaker.databinding.FragmentTakePhotoBinding
 import com.shaunhossain.phototaker.repository.TaskRepository
@@ -37,7 +39,9 @@ class TakePhotoFragment : Fragment() {
     private lateinit var imageUri: Uri
     private val CAMERA_PERMISSION_CODE: Int = 1
 
-   private val timeStamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'",Locale.ENGLISH).format(Date())
+    private val timeStamp =
+        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH).format(Date())
+    private lateinit var adapter: TaskAdapter
 
     private val database by lazy { AppDatabase.getDataBase(requireContext()) }
     private val repository by lazy { TaskRepository(database.taskImageDao()) }
@@ -59,9 +63,10 @@ class TakePhotoFragment : Fragment() {
 
         lifecycleScope.launch {
             repository.allTaskImage.collect {
-                if(it.isNotEmpty()){
-                    binding.imageView.setImageURI(null)
-                    binding.imageView.setImageURI(Uri.parse(it[0].imageFilePath))
+                if (it.isNotEmpty()) {
+                    binding.taskRecyclerView.layoutManager = LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false)
+                    adapter = TaskAdapter(it.asReversed())
+                    binding.taskRecyclerView.adapter = adapter
                 }
             }
         }
@@ -86,7 +91,12 @@ class TakePhotoFragment : Fragment() {
             ActivityResultCallback { result ->
                 try {
                     if (result) {
-                        val taskImage: TaskImage = TaskImage(taskId = 12, ticketNumber = "ticket-13", imageFilePath = imageUri.toString(), imagePosition = 1)
+                        val taskImage: TaskImage = TaskImage(
+                            taskId = 12,
+                            ticketNumber = "ticket-13",
+                            imageFilePath = imageUri.toString(),
+                            imagePosition = 1
+                        )
                         lifecycleScope.launch {
                             repository.insertTaskImage(taskImage)
                         }
@@ -125,8 +135,12 @@ class TakePhotoFragment : Fragment() {
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED
                 ) {
                     takePictureLauncher.launch(imageUri)
-                }else{
-                    Toast.makeText(requireContext(),"User denied camera permission",Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "User denied camera permission",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }

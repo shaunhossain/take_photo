@@ -11,15 +11,17 @@
         android:layout_height="match_parent"
         android:padding="16dp">
 
-        <ImageView
-            android:id="@+id/image_view"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/task_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:src="@drawable/demo"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:scrollbars="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/button_first"
             app:layout_constraintEnd_toEndOf="@+id/button_first"
             app:layout_constraintStart_toStartOf="@+id/button_first"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/task_item_view" />
 
         <Button
             android:id="@+id/button_first"
@@ -29,7 +31,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image_view" />
+            app:layout_constraintTop_toBottomOf="@+id/task_recycler_view" />
         />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
