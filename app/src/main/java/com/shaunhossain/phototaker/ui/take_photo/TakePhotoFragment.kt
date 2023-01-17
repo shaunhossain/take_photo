@@ -59,9 +59,12 @@ class TakePhotoFragment : Fragment() {
         lifecycleScope.launch {
             repository.allTaskImage.collect {
                 if (it.isNotEmpty()) {
+                    binding.taskRecyclerView.visibility = View.VISIBLE
                     binding.taskRecyclerView.layoutManager = LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false)
                     adapter = TaskAdapter(it.asReversed())
                     binding.taskRecyclerView.adapter = adapter
+                }else{
+                    binding.taskRecyclerView.visibility = View.GONE
                 }
             }
         }
