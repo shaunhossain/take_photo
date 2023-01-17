@@ -9,5 +9,21 @@
         android:id="@+id/FirstFragment"
         android:name="com.shaunhossain.phototaker.ui.take_photo.TakePhotoFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_take_photo"/>
+        tools:layout="@layout/fragment_take_photo">
+        <action
+            android:id="@+id/action_FirstFragment_to_contentImagePreviewDialog"
+            app:destination="@id/contentImagePreviewDialog" />
+        <argument
+            android:name="taskData"
+            app:argType="com.shaunhossain.phototaker.room_db.entity.TaskImage" />
+    </fragment>
+    <dialog
+        android:id="@+id/contentImagePreviewDialog"
+        android:name="com.shaunhossain.phototaker.ui.dialog.ContentImagePreviewDialog"
+        android:label="content_image_preview"
+        tools:layout="@layout/content_image_preview" >
+        <argument
+            android:name="taskData"
+            app:argType="com.shaunhossain.phototaker.room_db.entity.TaskImage" />
+    </dialog>
 </navigation>

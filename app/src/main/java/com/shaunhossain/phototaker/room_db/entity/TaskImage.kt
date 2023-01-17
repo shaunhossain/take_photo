@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.shaunhossain.phototaker.utils.taskImageTable
+import java.io.Serializable
 
 @Entity(tableName = taskImageTable)
 data class TaskImage(
@@ -12,5 +13,5 @@ data class TaskImage(
     @ColumnInfo(name = "TicketNumber") var ticketNumber: String?,
     @ColumnInfo(name = "ImageFilePath") var imageFilePath: String?,
     @ColumnInfo(name = "ImagePosition") var imagePosition: Int
-)
+): Serializable
 
