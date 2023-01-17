@@ -19,8 +19,8 @@ class TaskRepository(private val taskImageDao: TaskImageDao?) {
     }
 
     @WorkerThread
-    suspend fun deleteTaskImage(task_id: Int?){
-        taskImageDao!!.deleteTask(task_id)
+    suspend fun deleteTaskImage(taskImage: TaskImage){
+        taskImageDao!!.deleteTask(taskImage)
     }
 
     @WorkerThread

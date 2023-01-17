@@ -39,7 +39,7 @@ class ContentImagePreviewDialog : DialogFragment() {
         }
         binding.deleteButton.setOnClickListener {
             lifecycleScope.launch {
-                repository.deleteTaskImage(args.taskData.taskId)
+                repository.deleteTaskImage(args.taskData)
             }
             findNavController().popBackStack()
         }
