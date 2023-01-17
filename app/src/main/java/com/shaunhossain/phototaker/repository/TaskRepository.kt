@@ -17,4 +17,14 @@ class TaskRepository(private val taskImageDao: TaskImageDao?) {
     suspend fun updateTaskImage(task_id: String?, file_path: String?, position: Int?){
         taskImageDao!!.updatePath(task_id,file_path,position)
     }
+
+    @WorkerThread
+    suspend fun deleteTaskImage(task_id: Int?){
+        taskImageDao!!.deleteTask(task_id)
+    }
+
+    @WorkerThread
+    suspend fun deleteAllTaskImage(){
+        taskImageDao!!.deleteAll()
+    }
 }

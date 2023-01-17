@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import android.Manifest
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -35,8 +36,7 @@ class TakePhotoFragment : Fragment() {
     private lateinit var imageUri: Uri
     private val CAMERA_PERMISSION_CODE: Int = 1
 
-    private val timeStamp =
-        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH).format(Date())
+    private lateinit var imageName: String
     private lateinit var adapter: TaskAdapter
 
     private val database by lazy { AppDatabase.getDataBase(requireContext()) }
@@ -54,7 +54,6 @@ class TakePhotoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        imageUri = createUri()
         registerPictureLauncher()
 
         lifecycleScope.launch {
@@ -68,12 +67,16 @@ class TakePhotoFragment : Fragment() {
         }
 
         binding.buttonFirst.setOnClickListener {
+            val timeStamp =
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).format(Date())
+            imageName = "Photo_Taker_$timeStamp.jpg"
+            imageUri = createUri(imageName)
             checkCameraPermissionAndOpenCamera()
         }
     }
 
-    private fun createUri(): Uri {
-        val imageFile: File = File(requireContext().filesDir, "Take_Photo_$timeStamp.jpg")
+    private fun createUri(fileName: String): Uri {
+        val imageFile: File = File(requireContext().filesDir, fileName)
         return FileProvider.getUriForFile(
             requireContext(),
             "com.shaunhossain.phototaker.fileProvider",
@@ -85,6 +88,7 @@ class TakePhotoFragment : Fragment() {
         takePictureLauncher = registerForActivityResult(
             ActivityResultContracts.TakePicture(),
             ActivityResultCallback { result ->
+                Log.d("image",imageUri.toString())
                 try {
                     if (result) {
                         val taskImage: TaskImage = TaskImage(

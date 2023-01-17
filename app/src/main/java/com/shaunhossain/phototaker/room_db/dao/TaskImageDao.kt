@@ -15,16 +15,16 @@ interface TaskImageDao {
     @Query("SELECT * FROM $taskImageTable WHERE TicketNumber =:ticket_number")
     fun getImagePosition(ticket_number: String?): Flow<List<TaskImage>>
 
-    @Query("SELECT * FROM $taskImageTable WHERE taskId =:task_id AND ImagePosition = :position")
+    @Query("SELECT * FROM $taskImageTable WHERE TaskId =:task_id AND ImagePosition = :position")
     fun getImageList(task_id: String?, position: Int?): Flow<List<TaskImage>>
 
-    @Query("SELECT * FROM $taskImageTable WHERE taskId =:task_id")
+    @Query("SELECT * FROM $taskImageTable WHERE TaskId =:task_id")
     fun getImage(task_id: String?): Flow<List<TaskImage>>
 
-    @Query("SELECT * FROM $taskImageTable WHERE taskId =:task_id")
+    @Query("SELECT * FROM $taskImageTable WHERE TaskId =:task_id")
     fun getImageDB(task_id: String?): Flow<List<TaskImage>>
 
-    @Query("SELECT * FROM $taskImageTable WHERE taskId =:task_id AND TicketNumber =:ticket_number")
+    @Query("SELECT * FROM $taskImageTable WHERE TaskId =:task_id AND TicketNumber =:ticket_number")
     fun getImageByTypeDB(task_id: String?, ticket_number: String?): Flow<List<TaskImage>>
 
     @Query("SELECT * FROM $taskImageTable")
@@ -36,16 +36,16 @@ interface TaskImageDao {
     @Query("DELETE FROM $taskImageTable WHERE taskId = :task_id AND ImagePosition =:position")
     suspend fun delete(task_id: String?, position: Int?)
 
-    @Query("DELETE FROM $taskImageTable WHERE taskId = :task_id")
-    suspend fun deleteTask(task_id: String?)
+    @Query("DELETE FROM $taskImageTable WHERE TaskId = :task_id")
+    suspend fun deleteTask(task_id: Int?)
 
     @Query("DELETE FROM $taskImageTable")
     suspend fun deleteAll()
 
-    @Query("UPDATE $taskImageTable SET ImageFilePath=:file_path WHERE taskId = :task_id AND ImagePosition =:position")
+    @Query("UPDATE $taskImageTable SET ImageFilePath=:file_path WHERE TaskId = :task_id AND ImagePosition =:position")
     suspend fun updatePath(task_id: String?, file_path: String?, position: Int?)
 
-    @Query("UPDATE $taskImageTable SET  ImagePosition =:position WHERE taskId = :task_id AND ImageFilePath=:file_path")
+    @Query("UPDATE $taskImageTable SET  ImagePosition =:position WHERE TaskId = :task_id AND ImageFilePath=:file_path")
     suspend fun updatePosition(task_id: String?, file_path: String?, position: Int?)
 
     @Query("UPDATE $taskImageTable SET  TaskId =:task_id WHERE TicketNumber =:ticket_number")
