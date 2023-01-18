@@ -38,6 +38,7 @@ class TakePhotoFragment : Fragment() {
 
     private lateinit var imageName: String
     private lateinit var adapter: TaskAdapter
+    private lateinit var imageList: List<TaskImage>
 
     private val database by lazy { AppDatabase.getDataBase(requireContext()) }
     private val repository by lazy { TaskRepository(database.taskImageDao()) }
@@ -59,12 +60,16 @@ class TakePhotoFragment : Fragment() {
         lifecycleScope.launch {
             repository.allTaskImage.collect {
                 if (it.isNotEmpty()) {
+                    imageList = it
                     binding.taskRecyclerView.visibility = View.VISIBLE
-                    binding.taskRecyclerView.layoutManager = LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false)
+                    binding.buttonDeleteAll.visibility = View.VISIBLE
+                    binding.taskRecyclerView.layoutManager =
+                        LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
                     adapter = TaskAdapter(it.asReversed())
                     binding.taskRecyclerView.adapter = adapter
-                }else{
+                } else {
                     binding.taskRecyclerView.visibility = View.GONE
+                    binding.buttonDeleteAll.visibility = View.GONE
                 }
             }
         }
@@ -75,6 +80,26 @@ class TakePhotoFragment : Fragment() {
             imageName = "Photo_Taker_$timeStamp.jpg"
             imageUri = createUri(imageName)
             checkCameraPermissionAndOpenCamera()
+        }
+
+        binding.buttonDeleteAll.setOnClickListener {
+            deleteAllImage()
+        }
+    }
+
+    private fun deleteAllImage() {
+        if (imageList.isNotEmpty()) {
+            for (i in imageList.indices) {
+                if (imageList[i].imageFilePath!!.isNotEmpty()) {
+                    imageList[i].imageFilePath?.let {
+                        repository.deleteFile(Uri.parse(it), requireContext())
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repository.deleteAllTaskImage()
         }
     }
 
@@ -91,7 +116,7 @@ class TakePhotoFragment : Fragment() {
         takePictureLauncher = registerForActivityResult(
             ActivityResultContracts.TakePicture(),
             ActivityResultCallback { result ->
-                Log.d("image",imageUri.toString())
+                Log.d("image", imageUri.toString())
                 try {
                     if (result) {
                         val taskImage: TaskImage = TaskImage(

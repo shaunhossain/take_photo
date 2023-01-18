@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/FirstFragment"
         android:name="com.shaunhossain.phototaker.ui.take_photo.TakePhotoFragment"
-        android:label="@string/first_fragment_label"
+        android:label="@string/photo_taker_label"
         tools:layout="@layout/fragment_take_photo">
         <action
             android:id="@+id/action_FirstFragment_to_contentImagePreviewDialog"
